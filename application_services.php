@@ -14,7 +14,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 //Require that application_functions script in included in the file
-require 'application_functions';
+require 'application_functions.php';
 
 //Define script gobal variables
 

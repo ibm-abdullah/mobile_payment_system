@@ -183,11 +183,10 @@ class ApplicationFunctions
     }
 
     /**
-
      *Method to query users session state. checking if the user has an existing session and if so the session count.
      *@param msisdn, specific column to query
      *@return string
-     */
+     **/
 
     public function sessionManager($msisdn)
     {
@@ -215,11 +214,31 @@ class ApplicationFunctions
         } catch (PDOException $e) {
 
             #echo $e->getMessage();
-
             return null;
-
         }
 
+    }
+
+    public function addTransaction($sender_number, $recipient_number,$amount){
+
+        $db = Database::getInstance();
+
+        try {
+
+            $stmt = $db->prepare("insert into transactions(sender_msisdn,recipient_msisdn,amount) values (:sender_msisdn,:recipient_msisdn,:amount)");
+            $stmt->bindParam("sender_msisdn", $$sender_number);
+            $stmt->bindParam("recipient_msisdn", $recipient_number);
+            $stmt->bindParam("amount", $amount);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+
+        } catch (PDOException $e) {
+            #$e->getMessage();
+            return false;
+        }
     }
 
 }
