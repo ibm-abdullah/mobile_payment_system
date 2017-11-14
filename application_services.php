@@ -29,7 +29,7 @@ $ussd = new ApplicationFunctions();
 $msisdn = $_GET['number'];
 $data = $_GET['body'];
 $sessionID = $_GET['sessionID'];
-
+$reply = '';
 $amountToBeTransfered = '';
 //Check for the seesion level of the user
 $sess = intval($ussd->sessionManager($msisdn));
@@ -107,6 +107,7 @@ if ($sess == "0") {
                     $type = "0";
                     $ussd->deleteAllSession($msisdn);
                 } else {
+                    var_dump($creditResponse);
                     $result_status = $creditResponse['status'];
                     $transactionID = $creditResponse['rans_id'];
                     
@@ -115,7 +116,7 @@ if ($sess == "0") {
                         //Transfer money from mpontu to the mobile money 
                         //account of the recipient phone number
                         $debitResponse = $api_accessor->debit($amountToBeTransfered, $recipient_number, $recipient_vendor);
-                        
+                        var_dump($debitResponse);
                         if($debitResponse == FALSE){
                             //Transaction not succesful
                         }else{
