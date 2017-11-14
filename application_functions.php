@@ -11,10 +11,6 @@ require 'database.php';
 class ApplicationFunctions
 {
 
-    public function __construct(){ }
-
-    public function __destruct() { }
-
     public function IdentifyUser($msisdn)
     {
         $db = Database::getInstance();
@@ -197,7 +193,7 @@ class ApplicationFunctions
 
         {
 
-            $stmt = $db->prepare("SELECT (COUNT(msisdn)+ COUNT(transaction_type)) AS counter FROM sessionmanager WHERE msisdn = :msisdn");
+            $stmt = $db->prepare("SELECT (COUNT(msisdn)+ COUNT(transaction_type)+COUNT(amount_added)) AS counter FROM sessionmanager WHERE msisdn = :msisdn");
 
             $stmt->bindParam(":msisdn", $msisdn);
 
