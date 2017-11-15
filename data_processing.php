@@ -15,7 +15,7 @@ class ProcessUserInput {
                 $vendor = "MTN";
                 break;
             case '020':
-                $$vendor = "Vodafone";
+                $vendor = "Vodafone";
                 break;
             case '027':
             case '057':
@@ -27,6 +27,8 @@ class ProcessUserInput {
                 $vendor = NULL;
                 break;
         }
+
+        return $vendor;
     }
 
 }

@@ -44,7 +44,7 @@ if ($sess == "0") {
     //If the session level is zero, display the application menu to the user
     $ussd->IdentifyUser($msisdn);
 
-    $reply = "Welcome to Hamdulilah Mobile Payment System" . "\r\n" . "1. Send Money to all Networks" . "\r\n" . "2. Exit";
+    $reply = "Welcome to Hamdulilah Mobile Payment System" ."\r\n"."1. Send Money to all Networks"."\r\n". "0. Exit";
     $type = "1";
 } else {
 
@@ -53,10 +53,10 @@ if ($sess == "0") {
         case 1: #SESSION COUNT =1 #SERVICE LEVEL 1
 
             if ($data == '1') {
-                $reply = "1. Enter Amount" . "\r\n" . "2. Exit";
+                $reply = "1. Enter Amount"."\r\n"."0. Exit";
                 $type = "1";
                 $ussd->UpdateTransactionType($msisdn, "transaction_type", 'DEBIT');
-            } elseif ($data == '2') {
+            } elseif ($data == '0') {
                 $reply = "Trascation process cancelled.";
                 $type = "0";
                 $ussd->deleteSession($msisdn);
@@ -72,10 +72,11 @@ if ($sess == "0") {
             if (preg_match("/^\d+(?:\.\d{2})?$/", $data)) {
                 //add send button and cancel button to the interface
                 $amountToBeTransfered = $data;
-                $reply = "Enter recipient phone number" . "\r\n" . "2. Exit";
+                echo "Amount to be tranfered"."$amountToBeTransfered"."\r\n";
+                $reply = " 1. Enter recipient phone number"."\r\n"."0. Exit";
                 $type = "1";
                 $ussd->UpdateTransactionType($msisdn, "amount_added", 'YES');
-            } elseif ($data == '2') {
+            } elseif ($data == '0') {
                 $reply = "Trascation process cancelled.";
                 $type = "0";
                 $ussd->deleteSession($msisdn);
@@ -91,47 +92,62 @@ if ($sess == "0") {
             //Find the regular expression for validating Ghana telephone number
             if (preg_match('/(0[0-9]{9})/', $data)) {
 
-
                 //Determine the vendor of the both the sender and the recipient
                 $data_processor = new ProcessUserInput();
                 $api_accessor = new APICalls();
 
+                //Determine the vendor of the sender and recipient phone  numbers
                 $sender_vendor = $data_processor->identifyVendor($msisdn);
                 $recipient_vendor = $data_processor->identifyVendor($data);
 
+                //Firs API call to credit senders account
                 $creditResponse = $api_accessor->credit($amountToBeTransfered, $msisdn, $sender_vendor);
 
-                if ($creditResponse === FALSE) {
+                if ($creditResponse == false) {
                     //Money has not been sent to Npontu
                     $reply = "Trasaction could not be processed. Try Again";
                     $type = "0";
                     $ussd->deleteAllSession($msisdn);
                 } else {
-                    var_dump($creditResponse);
                     $result_status = $creditResponse['status'];
-                    $transactionID = $creditResponse['rans_id'];
+                    $transactionID = $creditResponse['trans_id'];
                     
                     if($result_status =='success'){
                         
                         //Transfer money from mpontu to the mobile money 
                         //account of the recipient phone number
-                        $debitResponse = $api_accessor->debit($amountToBeTransfered, $recipient_number, $recipient_vendor);
-                        var_dump($debitResponse);
-                        if($debitResponse == FALSE){
-                            //Transaction not succesful
+                        $debitResponse = $api_accessor->debit($amountToBeTransfered, $data,$recipient_vendor);
+
+                        if($debitResponse == false){
+                            $reply = "Trascation couldn't be processed";
+                            $type = '0';
+                            $ussd->deleteSession($msisdn);
                         }else{
                             $result_status = $debitResponse['status'];
-                            $transactionID = $debitResponse['rans_id'];
+                            $transactionID = $debitResponse['trans_id'];
                             
                             if($result_status =='success'){
+
+                                //Send a text message to the to both the sender and the recipient phone numbers.
+
+                                
+                                $reply = "Transaction successful.";
+                                $type = "0";
+                                $ussd->deleteSession($msisdn);
                                 
                             }else{
                                 //Transaction was not successful
+                                $reply = "Trascation couldn't be processed";
+                                $type = '0';
+                                $ussd->deleteSession($msisdn);
                             }
                         }
                             
                     }else{
                         //transaction was not succesful
+                            $reply = "Trascation couldn't be processed";
+                            $type = '0';
+                            $ussd->deleteSession($msisdn);
                     }
                 }
 
@@ -159,7 +175,8 @@ if ($sess == "0") {
     }
 }
 
-$response = $msisdn . '|' . $reply . '|' . $sessionID . '|' . $type;
+//$response = $msisdn.'|'.$reply .'|'. $sessionID.'|'.$type;
+$response = $reply.'|'.$type;
 $write = $time . "|Request_reply|" . $response . PHP_EOL;
 file_put_contents('ussd_access.log', $write, FILE_APPEND);
 echo $response;
