@@ -1,7 +1,8 @@
 <?php
 
 /**
- *
+ *  This class process telephone numbers to identify
+ * the vendor uniques code
  */
 class ProcessUserInput {
 

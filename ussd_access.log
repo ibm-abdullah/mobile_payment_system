@@ -240,3 +240,15 @@
 0. Exit|1
 2017-11-15 20:03:24|Request|0540319917|123456789|0201484933|3
 2017-11-15 20:03:24|Request_reply|Trascation couldn't be processed|1
+2017-11-15 21:09:59|Request|0201484933|123456789|1|0
+2017-11-15 21:09:59|Request_reply|Welcome to Hamdulilah Mobile Payment System
+1. Send Money to all Networks
+0. Exit|1
+2017-11-15 21:10:04|Request|0201484933|123456789|1|1
+2017-11-15 21:10:04|Request_reply|1. Enter Amount
+0. Exit|1
+2017-11-15 21:10:09|Request|0201484933|123456789|1|2
+2017-11-15 21:10:09|Request_reply| 1. Enter recipient phone number
+0. Exit|1
+2017-11-15 21:10:38|Request|0201484933|123456789|0540319917|3
+2017-11-15 21:10:38|Request_reply|Trascation couldn't be processed|1
