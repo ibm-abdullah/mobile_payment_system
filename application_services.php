@@ -4,7 +4,8 @@
  * This file contains the content that are displayed to the user in the USSD interface.
  * @Author : Ibrahim Abdullah
  * @Since : November 9, 2017
- * This work is submitted as a Midsemester project for my  Mobile Application Development Class @ Ashesi University College
+ * This work is submitted as a Midsemester project for my  Mobile Application Development Class @Ashesi 
+ * University College
  *
  **/
 //Error
@@ -25,11 +26,10 @@ $time = date('Y-m-d H:i:s');
 $ussd = new ApplicationFunctions();
 
 //Get session variables from user request
-$msisdn               = $_GET['number'];
-$data                 = $_GET['body'];
-$sessionID            = $_GET['sessionID'];
-$reply                = '';
-$amountToBeTransfered = '';
+$msisdn = $_GET['number'];
+$data = $_GET['body'];
+$sessionID= $_GET['sessionID'];
+$reply= '';
 //Check for the seesion level of the user
 $sess = intval($ussd->sessionManager($msisdn));
 
@@ -52,11 +52,11 @@ if ($sess == "0") {
         case 1: #SESSION COUNT =1 #SERVICE LEVEL 1
 
             if ($data == '1') {
-                $reply = "1. Enter Amount" . "\r\n" . "0. Exit";
+                $reply = "Enter the amount to be transferred" . "\r\n" . "0. Exit";
                 $type  = "1";
                 $ussd->UpdateTransactionType($msisdn, "transaction_type", 'DEBIT');
             } elseif ($data == '0') {
-                $reply = "Trascation process cancelled.";
+                $reply = "Transaction process cancelled.";
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
             } else {
@@ -65,18 +65,17 @@ if ($sess == "0") {
                 $ussd->deleteSession($msisdn);
             }
             break;
-        case 2:
+        case 2: #SESSION COUNT =2 #SERVICE LEVEL 2
 
             //Validate the amount of money entered by the user
             if (preg_match("/^\d+(?:\.\d{2})?$/", $data)) {
                 //add send button and cancel button to the interface
                 $amountToBeTransfered = $data;
-                echo "Amount to be tranfered" . "$amountToBeTransfered" . "\r\n";
-                $reply = " 1. Enter recipient phone number" . "\r\n" . "0. Exit";
+                $reply = "Enter the phone number the send money to" . "\r\n" . "0. Exit";
                 $type  = "1";
-                $ussd->UpdateTransactionType($msisdn, "amount_added", 'YES');
+                $ussd->UpdateTransactionType($msisdn, "amount", "$data");
             } elseif ($data == '0') {
-                $reply = "Trascation process cancelled.";
+                $reply = "Transaction process cancelled.";
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
             } else {
@@ -86,97 +85,76 @@ if ($sess == "0") {
             }
             break;
 
-        case 3: #SESSION COUNT =2 #SERVICE LEVEL 2
+        case 3: #SESSION COUNT =3 #SERVICE LEVEL 3
             //Check if the data is a valid telephone number
             //Find the regular expression for validating Ghana telephone number
             if (preg_match('/(0[0-9]{9})/', $data)) {
 
                 //Determine the vendor of the both the sender and the recipient
                 $data_processor = new ProcessUserInput();
-                $api_accessor   = new APICalls();
 
                 //Determine the vendor of the sender and recipient phone  numbers
                 $sender_vendor    = $data_processor->identifyVendor($msisdn);
                 $recipient_vendor = $data_processor->identifyVendor($data);
-
-                if ($recipient_vendor == null) {
-                    $reply = "Transaction could not be processed. Phone number invalid";
+                $recipient_number = $data;
+                if($recipient_vendor == NULL){
+                    //Incorrect recipient number
+                    //Cancel transaction
+                    $reply = "Recipient number incorrect";
                     $type  = "0";
-                    $ussd->deleteAllSession($msisdn);
+                    $ussd->deleteSession($msisdn);
+                }else{
+                    $amountToBeTransfered = $ussd->getColumnData($msisdn,"amount");
+                    $reply ="Confirm you want to transfer ".$amountToBeTransfered." GHS from your account to ".$data."\r\n"
+                        . "1. Confirm". "\r\n" ."0. Cancel";
+                    $type ="1";
+                    $ussd->UpdateTransactionType($msisdn, "recipient_number", "$data");
                 }
-                //Firs API call to credit senders account
-                $creditResponse = $api_accessor->credit($amountToBeTransfered, $msisdn, $sender_vendor);
-
-                if ($creditResponse == false) {
-                    //Money has not been sent to Npontu
-                    $reply = "Trasaction could not be processed. Try Again";
-                    $type  = "0";
-                    $ussd->deleteAllSession($msisdn);
-                } else {
-                    $result_status = $creditResponse['status'];
-                    $transactionID = $creditResponse['trans_id'];
-
-                    if ($result_status == 'success') {
-
-                        //Transfer money from mpontu to the mobile money
-                        //account of the recipient phone number
-                        $debitResponse = $api_accessor->debit($amountToBeTransfered, $data, $recipient_vendor);
-
-                        if ($debitResponse == false) {
-                            $reply = "Trascation couldn't be processed";
-                            $type  = '0';
-                            $ussd->deleteSession($msisdn);
-                        } else {
-                            $result_status = $debitResponse['status'];
-                            $transactionID = $debitResponse['trans_id'];
-
-                            if ($result_status == 'success') {
-
-                                //Send a text message to the to both the sender and the recipient phone numbers.
-                                $messageToSender = "$amountToBeTransfered" . "GHS has been tranfered from your mobile money account to " . " " . "$recipient_number " . " " . " with transactionID" . " " . "$transactionID";
-
-                                $messageToRecipient = "The number " . " " . "$sender_number" . " " . " has transfered an amount of " . "$amountToBeTransfered" . " to your mobile money account";
-
-                                //Send text messages
-                                $senderTextMessageResponse    = $api_accessor->sendTextMessage($msisdn, $messageToSender);
-                                $recipientTextMessageResponse = $api_accessor->sendTextMessage($data, $messageToRecipient);
-
-                                if ($messageToRecipient == true) {
-                                    $reply = "Transaction successful. SMS has been sent to your phone";
-                                    $type  = "0";
-                                    $ussd->deleteSession($msisdn);
-                                }
-
-                            } else {
-                                //Transaction was not successful
-                                $reply = "Trascation couldn't be processed";
-                                $type  = '0';
-                                $ussd->deleteSession($msisdn);
-                            }
-                        }
-
-                    } else {
-                        //transaction was not succesful
-                        $reply = "Trascation couldn't be processed";
-                        $type  = '0';
-                        $ussd->deleteSession($msisdn);
-                    }
-                }
-
-                $type = "1";
-            } elseif ($data == '2') {
-
-                $reply = "Trascation process cancelled.";
+            }else if($data == 0){
+                $reply = "Transaction process cancelled.";
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
-            } else {
-                $reply = "Invalid phone number";
+            }else{
+                $reply = "Transaction process cancelled.";
+                $type  = "0";
+                $ussd->deleteSession($msisdn);
+            }
+            break;
+        case 4: #SESSION COUNT =4 #SERVICE LEVEL 4
+            if($data == '1'){
+                
+                $amount = $ussd->getColumnData($msisdn,"amount");
+                $recipient_number = $ussd->getColumnData($msisdn,"recipient_number");
+                
+                $sender_vendor    = $data_processor->identifyVendor($msisdn);
+                
+                //Generate transaction ID
+                $transactionID = $ussd->generateTransactionId($recipient_number, $msisdn);
+                
+                //Insert transaction details into database
+                $ussd->addTransaction($msisdn, $recipient_number, $amount, $transactionID);
+                
+                //make the firs API call 
+                $api_accesor = new APICalls();
+                $api_accesor->debit($amount, $msisdn, $sender_vendor, $transactionID);
+                
+                
+                
+                $reply = "Your transcation is being processed";
+                $type = "0";
+                $ussd->deleteAllSession($msisdn);
+            }else if($data == '0'){
+                $reply = "Transaction process cancelled.";
+                $type  = "0";
+                $ussd->deleteSession($msisdn);
+            }else{
+                $reply = "Transaction process cancelled.";
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
             }
             break;
         default:
-            $reply = "More session counts and menus to come.";
+            $reply = "Trnsaction cancelled.";
             $type  = "0";
             $ussd->deleteSession($msisdn);
             break;

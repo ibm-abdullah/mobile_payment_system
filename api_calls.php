@@ -12,7 +12,7 @@ class APICalls
      * @param type $vendor The telecom member of the 
      * @return type The status of the call
      */
-    public function credit($amount, $sender_number, $vendor)
+    public function debit($amount, $sender_number, $vendor,$transactionID)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -22,29 +22,21 @@ class APICalls
             CURLOPT_POSTFIELDS     => array(
                 'amt'        => "$amount",
                 'number'     => "$sender_number",
-                'uid'        => 'ashesi',
-                'pass'       => 'ashesi',
-                'tp'         => '19486393035a03c90fd2afd',
+                'uid'        => 'ibrahim.abdullah',
+                'pass'       => 'profib2018',
+                'tp'         => "$transactionID",
                 'trans_type' => 'debit',
                 'msg'        => 'tranfering money',
                 'vendor'     => "$vendor",
-                'cbk'        => 'http://gmpay.npontu.com/api/tigo',
+                'cbk'        => '144.76.58.179/ashesi/700/debit_api_response.php',
             ),
         ));
-        // Send the request & save response to $resp
-        $resp = curl_exec($curl);
-
-        if ($resp === false) {
-            $resp = false;
-        } else if ($resp === true) {
-            //No error but no response either
-            $resp = false;
-        } else {
-            //encode the json response into an associative array
-            $resp = json_decode($resp, true);
+        $response = curl_exec($curl);
+        
+        if(($response ===TRUE)||($response === FALSE)){
+            //Could not access API. Send SMS of transaction could ot be processed
+            
         }
-        curl_close($curl);
-        return $resp;
     }
 
     /**
@@ -54,7 +46,7 @@ class APICalls
      * @param type $vendor the telecom vendor of the recipient
      * @return type The status of the API calls
      */
-    public function debit($amount, $recipient_number, $vendor)
+    public function credit($amount, $recipient_number, $vendor,$transactionID)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -64,28 +56,21 @@ class APICalls
             CURLOPT_POSTFIELDS     => array(
                 'amt'        => "$amount",
                 'number'     => "$recipient_number",
-                'uid'        => 'ashesi',
-                'pass'       => 'ashesi',
-                'tp'         => '19486393035a03c90fd2afd',
+                'uid'        => 'ibrahim.abdullah',
+                'pass'       => 'profib2018',
+                'tp'         => "$transactionID",
                 'trans_type' => 'credit',
                 'msg'        => 'Recieving money',
                 'vendor'     => "$vendor",
-                'cbk'        => 'http://gmpay.npontu.com/api/tigo',
+                'cbk'        => '144.76.58.179/ashesi/700/credit_api_response.php',
             ),
         ));
-        // Send the request & save response to $resp
-        $resp = curl_exec($curl);
-        if ($resp === false) {
-            $resp = false;
-        } else if ($resp === true) {
-            //No error but no response either
-            $resp = false;
-        } else {
-            //encode the json response into an associative array
-            $resp = json_decode($resp, true);
+        $response = curl_exec($curl);
+        
+        if(($response ===TRUE)||($response === FALSE)){
+            //Could not access API. Send SMS of transaction could ot be processed
+            
         }
-        curl_close($curl);
-        return $resp;
     }
 
     /**

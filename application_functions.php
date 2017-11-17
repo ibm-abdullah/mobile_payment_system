@@ -16,7 +16,7 @@ class ApplicationFunctions
             $stmt = $db->prepare("insert into sessionmanager(msisdn) values (:msisdn)");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
-            if ($stmt->rowCount() > 0) {
+            if ($stmt->rowCount() > 0){
                 return true;
             }
         } catch (PDOException $e) {
@@ -60,7 +60,6 @@ class ApplicationFunctions
                 return true;
             }
         } catch (PDOException $e) {
-            #echo $e->getMessage();
             return false;
         }
     }
@@ -84,6 +83,21 @@ class ApplicationFunctions
         } catch (PDOException $e) {
             #echo $e->getMessage();
             return false;
+        }
+    }
+    public function getColumnData($msisdn,$col){
+        $db = Database::getInstance();
+        try{
+            $stmt = $db->prepare("SELECT " .$col. " FROM  sessionmanager WHERE  msisdn = :msisdn");
+            $stmt->bindParam(":msisdn", $msisdn);
+            $stmt->execute();
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($res !== false) {
+                return $res[$col];
+            }
+        } catch (PDOException $e) {
+            #echo $e->getMessage();
+            return null;
         }
     }
 
@@ -120,7 +134,7 @@ class ApplicationFunctions
     {
         $db = Database::getInstance();
         try{
-            $stmt = $db->prepare("SELECT (COUNT(msisdn)+ COUNT(transaction_type)+COUNT(amount_added)) AS counter FROM sessionmanager WHERE msisdn = :msisdn");
+            $stmt = $db->prepare("SELECT (COUNT(msisdn)+ COUNT(transaction_type)+COUNT(amount)+COUNT(recipient_number)) AS counter FROM sessionmanager WHERE msisdn = :msisdn");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -149,6 +163,38 @@ class ApplicationFunctions
             #$e->getMessage();
             return false;
         }
+    }
+    
+    public function getTransactionDetails($transactionID){
+        $db = Database::getInstance();
+        try{
+            $stmt = $db->prepare("SELECT sender_msisdn,recipient_msisdn,amount FROM  trnsactions WHERE  msisdn = :msisdn");
+            $stmt->bindParam(":msisdn", $msisdn);
+            $stmt->execute();
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($res !== false) {
+                return $res;
+            }
+        } catch (PDOException $e) {
+            #echo $e->getMessage();
+            return null;
+        }
+    }
+
+
+    /**
+     * 
+     * @param type $recipient_number phone number to send money to
+     * @param type $sender_number phone number to send money from
+     * @return string generated transaction id
+     */
+    public function generateTransactionId($recipient_number,$sender_number){
+        $prefix = random_int(10, 1000);
+        $resp = substr($recipient_number,3,5);
+        $send = substr($sender_number,5);
+        
+        $transactionID = $prefix.$send.$resp;
+        return $transactionID;
     }
 
 }
