@@ -443,3 +443,79 @@
 0. Cancel|1
 2017-11-17 10:01:31|Request|0545363070|123456789|1|4
 2017-11-17 10:01:31|Request_reply|Your transcation is being processed|0
+2017-11-18 21:55:08|Request|0545363070|123456789|1|3
+2017-11-18 21:55:08|Request_reply|0545363070|Transaction process cancelled.|123456789|0
+2017-11-18 21:56:17|Request|0545363070|123456789|1|0
+2017-11-18 21:56:17|Request_reply|0545363070|Welcome to Hamdulilah Mobile Payment System
+1. Send Money to all Networks
+0. Exit|123456789|1
+2017-11-18 21:59:26|Request|0545363070|123456789|1|1
+2017-11-18 21:59:26|Request_reply|0545363070|Enter the amount to be transferred
+0. Exit|123456789|1
+2017-11-18 21:59:30|Request|0545363070|123456789|1|2
+2017-11-18 21:59:30|Request_reply|0545363070|Enter the phone number the send money to
+0. Exit|123456789|1
+2017-11-18 21:59:46|Request|0545363070|123456789|0201484933|3
+2017-11-18 21:59:46|Request_reply|0545363070|Confirm you want to transfer 1 GHS from your account to 0201484933
+1. Confirm
+0. Cancel|123456789|1
+2017-11-18 22:00:01|Request|0545363070|123456789|1|4
+2017-11-18 22:02:29|Request|0545363070|123456789|1|4
+2017-11-18 22:03:18|Request|0545363070|123456789|1|4
+2017-11-18 22:03:18|Request_reply|0545363070|Your transcation is being processed|123456789|0
+2017-11-18 22:06:35|Request|0545363070|123456789|1|3
+2017-11-18 22:06:35|Request_reply|0545363070|Transaction process cancelled.|123456789|0
+2017-11-18 22:08:19|Request|0545363070|123456789|1|0
+2017-11-18 22:08:19|Request_reply|0545363070|Welcome to Hamdulilah Mobile Payment System
+1. Send Money to all Networks
+0. Exit|123456789|1
+2017-11-18 22:08:23|Request|0545363070|123456789|1|1
+2017-11-18 22:08:23|Request_reply|0545363070|Enter the amount to be transferred
+0. Exit|123456789|1
+2017-11-18 22:08:26|Request|0545363070|123456789|1|2
+2017-11-18 22:08:26|Request_reply|0545363070|Enter the phone number the send money to
+0. Exit|123456789|1
+2017-11-18 22:08:35|Request|0545363070|123456789|0201484933|3
+2017-11-18 22:08:35|Request_reply|0545363070|Confirm you want to transfer 1 GHS from your account to 0201484933
+1. Confirm
+0. Cancel|123456789|1
+2017-11-18 22:08:43|Request|0545363070|123456789|1|4
+2017-11-18 22:09:40|Request|0545363070|123456789|1|4
+2017-11-18 22:09:40|Request_reply|0545363070|Your transcation is being processed|123456789|0
+2017-11-18 22:16:28|Request|0545363070|123456789|1|3
+2017-11-18 22:16:28|Request_reply|0545363070|Transaction process cancelled.|123456789|0
+2017-11-18 22:20:44|Request|0545363070|123456789|1|0
+2017-11-18 22:20:44|Request_reply|0545363070|Welcome to Hamdulilah Mobile Payment System
+1. Send Money to all Networks
+0. Exit|123456789|1
+2017-11-18 22:21:11|Request|0545363070|123456789|1|1
+2017-11-18 22:21:11|Request_reply|0545363070|Enter the amount to be transferred
+0. Exit|123456789|1
+2017-11-18 22:21:32|Request|0545363070|123456789|1|2
+2017-11-18 22:21:32|Request_reply|0545363070|Enter the phone number the send money to
+0. Exit|123456789|1
+2017-11-18 22:21:57|Request|0545363070|123456789|0201484933|3
+2017-11-18 22:21:57|Request_reply|0545363070|Confirm you want to transfer 1 GHS from your account to 0201484933
+1. Confirm
+0. Cancel|123456789|1
+2017-11-18 22:22:20|Request|0545363070|123456789|1|4
+2017-11-18 22:26:32|Request|0545363070|123456789|1|4
+2017-11-18 22:26:32|Request_reply|0545363070|Your transcation is being processed|123456789|0
+2017-11-18 22:30:48|Request|0545363070|123456789|1|0
+2017-11-18 22:30:48|Request_reply|0545363070|Welcome to Hamdulilah Mobile Payment System
+1. Send Money to all Networks
+0. Exit|123456789|1
+2017-11-18 22:30:52|Request|0545363070|123456789|1|1
+2017-11-18 22:30:52|Request_reply|0545363070|Enter the amount to be transferred
+0. Exit|123456789|1
+2017-11-18 22:30:54|Request|0545363070|123456789|1|2
+2017-11-18 22:30:54|Request_reply|0545363070|Enter the phone number the send money to
+0. Exit|123456789|1
+2017-11-18 22:30:59|Request|0545363070|123456789|0201484933|3
+2017-11-18 22:30:59|Request_reply|0545363070|Confirm you want to transfer 1 GHS from your account to 0201484933
+1. Confirm
+0. Cancel|123456789|1
+2017-11-18 22:31:06|Request|0545363070|123456789|1|4
+2017-11-18 22:31:06|Request_reply|0545363070|Apllication server is down. Transaction cancelled|123456789|0
+2017-11-18 22:33:02|Request|0545363070|123456789|1|3
+2017-11-18 22:33:02|Request_reply|0545363070|Transaction process cancelled.|123456789|0

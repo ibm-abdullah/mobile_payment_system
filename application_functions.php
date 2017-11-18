@@ -70,12 +70,12 @@ class ApplicationFunctions
      *@param Boolean
      **/
 
-    public function UpdateTransactionType($msisdn, $col, $trans_type)
+    public function updateSessionLevel($msisdn, $col, $value)
     {
         $db = Database::getInstance();
         try{
-            $stmt = $db->prepare("update sessionmanager set " . $col . " = :trans_type where msisdn = :msisdn");
-            $params = array(":msisdn" => $msisdn, ":trans_type" => $trans_type);
+            $stmt = $db->prepare("update sessionmanager set " . $col . " = :value where msisdn = :msisdn");
+            $params = array(":msisdn" => $msisdn, ":value" => $value);
             $stmt->execute($params);
             if ($stmt->rowCount() > 0) {
                 return true;
@@ -85,6 +85,8 @@ class ApplicationFunctions
             return false;
         }
     }
+    
+    
     public function getColumnData($msisdn,$col){
         $db = Database::getInstance();
         try{
@@ -98,6 +100,21 @@ class ApplicationFunctions
         } catch (PDOException $e) {
             #echo $e->getMessage();
             return null;
+        }
+    }
+    
+    public function updateColumn($transactionID,$col,$value){
+        $db = Database::getInstance();
+        try{
+            $stmt = $db->prepare("update transactions set " . $col . " = :value where transactionID = :trans_id");
+            $params = array(":trans_id" => $transactionID, ":value" => $value);
+            $stmt->execute($params);
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            #echo $e->getMessage();
+            return false;
         }
     }
 
@@ -168,8 +185,8 @@ class ApplicationFunctions
     public function getTransactionDetails($transactionID){
         $db = Database::getInstance();
         try{
-            $stmt = $db->prepare("SELECT sender_msisdn,recipient_msisdn,amount FROM  trnsactions WHERE  msisdn = :msisdn");
-            $stmt->bindParam(":msisdn", $msisdn);
+            $stmt = $db->prepare("SELECT sender_msisdn,recipient_msisdn,amount FROM  transactions WHERE  transactionsID = :trans_id");
+            $stmt->bindParam(":trans_id", $transactionID);
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($res !== false) {

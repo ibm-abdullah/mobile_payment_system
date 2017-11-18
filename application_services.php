@@ -54,7 +54,7 @@ if ($sess == "0") {
             if ($data == '1') {
                 $reply = "Enter the amount to be transferred" . "\r\n" . "0. Exit";
                 $type  = "1";
-                $ussd->UpdateTransactionType($msisdn, "transaction_type", 'DEBIT');
+                $ussd->updateSessionLevel($msisdn, "transaction_type", "DEBIT");
             } elseif ($data == '0') {
                 $reply = "Transaction process cancelled.";
                 $type  = "0";
@@ -73,7 +73,7 @@ if ($sess == "0") {
                 $amountToBeTransfered = $data;
                 $reply = "Enter the phone number the send money to" . "\r\n" . "0. Exit";
                 $type  = "1";
-                $ussd->UpdateTransactionType($msisdn, "amount", "$data");
+                $ussd->updateSessionLevel($msisdn, "amount", "$data");
             } elseif ($data == '0') {
                 $reply = "Transaction process cancelled.";
                 $type  = "0";
@@ -94,9 +94,11 @@ if ($sess == "0") {
                 $data_processor = new ProcessUserInput();
 
                 //Determine the vendor of the sender and recipient phone  numbers
-                $sender_vendor    = $data_processor->identifyVendor($msisdn);
                 $recipient_vendor = $data_processor->identifyVendor($data);
                 $recipient_number = $data;
+                
+                //Cancel transaction if recipient number number does not have 
+                //the correct venfor name
                 if($recipient_vendor == NULL){
                     //Incorrect recipient number
                     //Cancel transaction
@@ -108,7 +110,7 @@ if ($sess == "0") {
                     $reply ="Confirm you want to transfer ".$amountToBeTransfered." GHS from your account to ".$data."\r\n"
                         . "1. Confirm". "\r\n" ."0. Cancel";
                     $type ="1";
-                    $ussd->UpdateTransactionType($msisdn, "recipient_number", "$data");
+                    $ussd->updateSessionLevel($msisdn, "recipient_number", "$data");
                 }
             }else if($data == 0){
                 $reply = "Transaction process cancelled.";
@@ -126,6 +128,7 @@ if ($sess == "0") {
                 $amount = $ussd->getColumnData($msisdn,"amount");
                 $recipient_number = $ussd->getColumnData($msisdn,"recipient_number");
                 
+                $data_processor = new ProcessUserInput();
                 $sender_vendor    = $data_processor->identifyVendor($msisdn);
                 
                 //Generate transaction ID
@@ -136,13 +139,17 @@ if ($sess == "0") {
                 
                 //make the firs API call 
                 $api_accesor = new APICalls();
-                $api_accesor->debit($amount, $msisdn, $sender_vendor, $transactionID);
+                $debit_response = $api_accesor->debit($amount, $msisdn, $sender_vendor, $transactionID);
                 
-                
-                
-                $reply = "Your transcation is being processed";
-                $type = "0";
-                $ussd->deleteAllSession($msisdn);
+                if(($debit_response == null) ||($debit_response['status'] =="failed")){
+                    $reply = "Apllication server is down. Transaction cancelled";
+                    $type = "0";
+                    $ussd->deleteSession($msisdn);
+                }else{ 
+                    $reply = "Your transcation is being processed";
+                    $type = "0";
+                    $ussd->deleteSession($msisdn);
+                }
             }else if($data == '0'){
                 $reply = "Transaction process cancelled.";
                 $type  = "0";
@@ -161,8 +168,8 @@ if ($sess == "0") {
     }
 }
 
-//$response = $msisdn.'|'.$reply .'|'. $sessionID.'|'.$type;
-$response = $reply . '|' . $type;
+$response = $msisdn.'|'.$reply .'|'. $sessionID.'|'.$type;
+//$response = $reply . '|' . $type;
 $write    = $time . "|Request_reply|" . $response . PHP_EOL;
 file_put_contents('ussd_access.log', $write, FILE_APPEND);
 echo $response;

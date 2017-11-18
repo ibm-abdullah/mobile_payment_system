@@ -32,10 +32,12 @@ class APICalls
             ),
         ));
         $response = curl_exec($curl);
-        
+
         if(($response ===TRUE)||($response === FALSE)){
             //Could not access API. Send SMS of transaction could ot be processed
-            
+            return null;   
+        }else{
+            return json_decode($response,true);
         }
     }
 
@@ -69,41 +71,10 @@ class APICalls
         
         if(($response ===TRUE)||($response === FALSE)){
             //Could not access API. Send SMS of transaction could ot be processed
-            
+            return null;   
+        }else{
+            return json_decode($response,true);
         }
-    }
-
-    /**
-     * 
-     * @param type $phone_number The phone number to send the text message to
-     * @param type $message the message to be sent
-     * @return type the status of the message
-     */
-    public function sendTextMessage($phone_number, $message)
-    {
-        $url = "api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination="."$phone_number"."&source=Test&message="."$message";
-        $curl = curl_init();
-
-        //Set curl parameters
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER=>1,
-            CURLOPT_URL=> "url"
-        ));
-
-        //Execute curl 
-        $resp = curl_exec($curl);
-        if ($resp === false) {
-            $resp = false;
-        } else if ($resp === true) {
-            //No error but no response either
-            $resp = false;
-        } else {
-            //encode the json response into an associative array
-            $resp = json_decode($resp, true);
-        }
-        curl_close($curl);
-        return $resp;
-
     }
 
 }

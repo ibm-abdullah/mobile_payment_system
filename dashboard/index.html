@@ -12,14 +12,14 @@
     <!-- Bootstrap Core CSS -->
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menu CSS -->
-    <link href="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
+    <link href="../plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
     <!-- toast CSS -->
-    <link href="plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
+    <link href="../plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
     <!-- morris CSS -->
-    <link href="plugins/bower_components/morrisjs/morris.css" rel="stylesheet">
+    <link href="../plugins/bower_components/morrisjs/morris.css" rel="stylesheet">
     <!-- chartist CSS -->
-    <link href="plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
-    <link href="plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
+    <link href="../plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
+    <link href="../plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
     <!-- animation CSS -->
     <link href="css/animate.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -35,11 +35,17 @@
 </head>
 
 <body class="fix-header">
+    <!-- ============================================================== -->
+    <!-- Preloader -->
+    <!-- ============================================================== -->
     <div class="preloader">
         <svg class="circular" viewBox="25 25 50 50">
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
         </svg>
     </div>
+    <!-- ============================================================== -->
+    <!-- Wrapper -->
+    <!-- ============================================================== -->
     <div id="wrapper">
         <!-- ============================================================== -->
         <!-- Topbar header - style you can find in pages.scss -->
@@ -50,10 +56,10 @@
                     <!-- Logo -->
                     <a class="logo" href="index.html">
                         <!-- Logo icon image, you can use font-icon also --><b>
-                        <!--This is dark logo icon--><img src="plugins/images/admin-logo.png" alt="home" class="dark-logo" /><!--This is light logo icon--><img src="plugins/images/admin-logo-dark.png" alt="home" class="light-logo" />
+                        <!--This is dark logo icon--><img src="../plugins/images/admin-logo.png" alt="home" class="dark-logo" /><!--This is light logo icon--><img src="../plugins/images/admin-logo-dark.png" alt="home" class="light-logo" />
                      </b>
                         <!-- Logo text image you can use text also --><span class="hidden-xs">
-                        <!--This is dark logo text--><img src="plugins/images/admin-text.png" alt="home" class="dark-logo" /><!--This is light logo text--><img src="plugins/images/admin-text-dark.png" alt="home" class="light-logo" />
+                        <!--This is dark logo text--><img src="../plugins/images/admin-text.png" alt="home" class="dark-logo" /><!--This is light logo text--><img src="../plugins/images/admin-text-dark.png" alt="home" class="light-logo" />
                      </span> </a>
                 </div>
                 <!-- /Logo -->
@@ -152,13 +158,10 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>SENDER</th>
-                                            <th>RECIPIENT</th>
+                                            <th>SENDER PHONE NUMBER</th>
+                                            <th>RECIPIENT PHONE NUMBER</th>
+                                            <th>DATE</th>
                                             <th>AMOUNT</th>
-                                            <th>TRANSACTION DATE</th>
-                                            <th>TRANSACTION ID</th>
-                                            <th>DEBIT_STATUS</th>
-                                            <th>CREDIT_STATUS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -168,6 +171,48 @@
                                             <td>SALE</td>
                                             <td class="txt-oflo">April 18, 2017</td>
                                             <td><span class="text-success">$24</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td class="txt-oflo">Real Homes WP Theme</td>
+                                            <td>EXTENDED</td>
+                                            <td class="txt-oflo">April 19, 2017</td>
+                                            <td><span class="text-info">$1250</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td class="txt-oflo">Ample Admin</td>
+                                            <td>EXTENDED</td>
+                                            <td class="txt-oflo">April 19, 2017</td>
+                                            <td><span class="text-info">$1250</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td class="txt-oflo">Medical Pro WP Theme</td>
+                                            <td>TAX</td>
+                                            <td class="txt-oflo">April 20, 2017</td>
+                                            <td><span class="text-danger">-$24</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td class="txt-oflo">Hosting press html</td>
+                                            <td>SALE</td>
+                                            <td class="txt-oflo">April 21, 2017</td>
+                                            <td><span class="text-success">$24</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td class="txt-oflo">Digital Agency PSD</td>
+                                            <td>SALE</td>
+                                            <td class="txt-oflo">April 23, 2017</td>
+                                            <td><span class="text-danger">-$14</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td class="txt-oflo">Helping Hands WP Theme</td>
+                                            <td>MEMBER</td>
+                                            <td class="txt-oflo">April 22, 2017</td>
+                                            <td><span class="text-success">$64</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -191,27 +236,27 @@
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../plugins/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Menu Plugin JavaScript -->
-    <script src="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+    <script src="../plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
     <!--slimscroll JavaScript -->
     <script src="js/jquery.slimscroll.js"></script>
     <!--Wave Effects -->
     <script src="js/waves.js"></script>
     <!--Counter js -->
-    <script src="plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
-    <script src="plugins/bower_components/counterup/jquery.counterup.min.js"></script>
+    <script src="../plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
+    <script src="../plugins/bower_components/counterup/jquery.counterup.min.js"></script>
     <!-- chartist chart -->
-    <script src="plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
-    <script src="plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="../plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
+    <script src="../plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
     <!-- Sparkline chart JavaScript -->
-    <script src="plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="../plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
     <script src="js/dashboard1.js"></script>
-    <script src="plugins/bower_components/toast-master/js/jquery.toast.js"></script>
+    <script src="../plugins/bower_components/toast-master/js/jquery.toast.js"></script>
 </body>
 
 </html>
