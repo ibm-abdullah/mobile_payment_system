@@ -30,20 +30,18 @@ $msisdn = $_GET['number'];
 $data = $_GET['body'];
 $sessionID= $_GET['sessionID'];
 $reply= '';
-
-
 //Check for the seesion level of the user
 $sess = intval($ussd->sessionManager($msisdn));
 
 //Log a session reguest to file
 $write = $time . "|Request|" . $msisdn . "|" . $sessionID . "|" . $data . "|" . $sess . PHP_EOL;
-file_put_contents('ussd_access.log', $write, FILE_APPEND);
+//file_put_contents('ussd_access.log', $write, FILE_APPEND);
 
 //Check the seesion level of the user
 
 if ($sess == "0") {
     //If the session level is zero, display the application menu to the user
-    $ussd->IdentifyUser($msisdn);
+    $response = $ussd->IdentifyUser($msisdn);
 
     $reply = "Welcome to Hamdulilah Mobile Payment System" . "\r\n" . "1. Send Money to all Networks" . "\r\n" . "0. Exit";
     $type  = "1";
@@ -54,7 +52,7 @@ if ($sess == "0") {
         case 1: #SESSION COUNT =1 #SERVICE LEVEL 1
 
             if ($data == '1') {
-                $reply = "Enter the amount to be transferred" . "\r\n" . "0. Exit";
+                $reply = "Enter the amount to be transferred in Ghana cedis" . "\r\n" . "0. Exit";
                 $type  = "1";
                 $ussd->updateSessionLevel($msisdn, "transaction_type", "DEBIT");
             } elseif ($data == '0') {
@@ -62,7 +60,7 @@ if ($sess == "0") {
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
             } else {
-                $reply = "Invalid Option Selected";
+                $reply = "Invalid Option Selected.Transaction has been cancelled";
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
             }
@@ -73,7 +71,7 @@ if ($sess == "0") {
             if (preg_match("/^\d+(?:\.\d{2})?$/", $data)) {
                 //add send button and cancel button to the interface
                 $amountToBeTransfered = $data;
-                $reply = "Enter the phone number the send money to" . "\r\n" . "0. Exit";
+                $reply = "Enter the phone number of the person you're sending the money to.Example:0541111111" . "\r\n" . "0. Exit";
                 $type  = "1";
                 $ussd->updateSessionLevel($msisdn, "amount", "$data");
             } elseif ($data == '0') {
@@ -104,7 +102,7 @@ if ($sess == "0") {
                 if($recipient_vendor == NULL){
                     //Incorrect recipient number
                     //Cancel transaction
-                    $reply = "Recipient number incorrect";
+                    $reply = "Recipient number incorrect.Kindly try again";
                     $type  = "0";
                     $ussd->deleteSession($msisdn);
                 }else{
@@ -144,20 +142,20 @@ if ($sess == "0") {
                 $debit_response = $api_accesor->debit($amount, $msisdn, $sender_vendor, $transactionID);
                 
                 if(($debit_response == null) ||($debit_response['status'] =="failed")){
-                    $reply = "Apllication server is down. Transaction cancelled";
+                    $reply = "Apllication server is down. Please try again later";
                     $type = "0";
                     $ussd->deleteSession($msisdn);
                 }else{ 
-                    $reply = "Your transcation is being processed";
+                    $reply = "Your transaction is being processed. You will receieve a notification to authorize the transaction very soon. You will also receive an SMS about the transaction status.Thank you";
                     $type = "0";
                     $ussd->deleteSession($msisdn);
                 }
             }else if($data == '0'){
-                $reply = "Transaction process cancelled.";
+                $reply = "Transaction process cancelled.Try again later";
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
             }else{
-                $reply = "Transaction process cancelled.";
+                $reply = "Transaction process cancelled.Try again later";
                 $type  = "0";
                 $ussd->deleteSession($msisdn);
             }
@@ -173,5 +171,6 @@ if ($sess == "0") {
 $response = $msisdn.'|'.$reply .'|'. $sessionID.'|'.$type;
 //$response = $reply . '|' . $type;
 $write    = $time . "|Request_reply|" . $response . PHP_EOL;
-file_put_contents('ussd_access.log', $write, FILE_APPEND);
+//file_put_contents('ussd_access.log', $write, FILE_APPEND);
 echo $response;
+?>

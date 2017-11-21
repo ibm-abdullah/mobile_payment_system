@@ -1,10 +1,6 @@
 <?php
     require '../application_functions.php';
-
-
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,25 +37,17 @@
                     //echo "$transcations";
                 ?>
                 <div class="row">
-                    <div class="col-lg-4 col-sm-6 col-xs-12">
+                    <div class="col-lg-6 col-sm-6 col-xs-12">
                         <div class="white-box analytics-info">
                             <h3 class="box-title">Number Of Transaction</h3>
                             <ul class="list-inline">
-                                <li class="text-center"><span class="counter text-success"><?php echo "$transcations";  ?></span></li>
+                                <li class="text-center"><span class="counter text-success"><?php echo "$transcations"; ?></span></li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-sm-6 col-xs-12">
+                    <div class="col-lg-6 col-sm-6 col-xs-12">
                         <div class="white-box analytics-info">
-                            <h3 class="box-title">Number of complete transfer</h3>
-                            <ul class="list-inline">
-                                <li class="text-center"> <span class="counter text-purple"><?php $count = $ussd->countOfCompleteTransfers(); echo "$count";  ?>0</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6 col-xs-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">Current Month Trasactions</h3>
+                            <h3 class="box-title">Total Amount Transfered this month</h3>
                             <ul class="list-inline">
                                 <li class="text-center"><span class="counter text-info"><?php $currMonth =$ussd->getCurrentMonthTransactions(); echo "$currMonth"; ?></span></li>
                             </ul>
@@ -71,18 +59,18 @@
                         <div class="white-box">
                             <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
                                 <select class="form-control pull-right row b-none">
-                                    <option value="January">January</option>
-                                    <option value="February">February</option>
-                                    <option value="March">March</option>
-                                    <option value="April">April</option>
-                                    <option value="May">May</option>
-                                    <option value="June">June</option>
-                                    <option value="July">July</option>
-                                    <option value="August">August</option>
-                                    <option value="September">September</option>
-                                    <option value="October">October</option>
-                                    <option value="November">November</option>
-                                    <option value="December">December</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
                                 </select>
                             </div>
                             <h3 class="box-title">Recent Money Transfer</h3>

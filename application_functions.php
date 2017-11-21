@@ -2,8 +2,8 @@
 <?php
 
 /**
- * This class implement the application Logic for rendering services 
- * 
+ * This class implement the application Logic for rendering services
+ *
  * */
 require 'database.php';
 class ApplicationFunctions
@@ -16,7 +16,7 @@ class ApplicationFunctions
             $stmt = $db->prepare("insert into sessionmanager(msisdn) values (:msisdn)");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
-            if ($stmt->rowCount() > 0){
+            if ($stmt->rowCount() > 0) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -27,11 +27,12 @@ class ApplicationFunctions
 
     /**
      * Delete the session a session entry in the database.
-     * 
+     *
      * */
-    public function deleteSession($msisdn){
+    public function deleteSession($msisdn)
+    {
         $db = Database::getInstance();
-        try{
+        try {
             $stmt = $db->prepare("Delete FROM sessionmanager where msisdn= :msisdn");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
@@ -52,7 +53,7 @@ class ApplicationFunctions
     public function deleteAllSession($msisdn)
     {
         $db = Database::getInstance();
-        try{
+        try {
             $stmt = $db->prepare("UPDATE sessionmanager SET transaction_type = NULL where msisdn= :msisdn");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
@@ -73,8 +74,8 @@ class ApplicationFunctions
     public function updateSessionLevel($msisdn, $col, $value)
     {
         $db = Database::getInstance();
-        try{
-            $stmt = $db->prepare("update sessionmanager set " . $col . " = :value where msisdn = :msisdn");
+        try {
+            $stmt   = $db->prepare("update sessionmanager set " . $col . " = :value where msisdn = :msisdn");
             $params = array(":msisdn" => $msisdn, ":value" => $value);
             $stmt->execute($params);
             if ($stmt->rowCount() > 0) {
@@ -85,12 +86,12 @@ class ApplicationFunctions
             return false;
         }
     }
-    
-    
-    public function getColumnData($msisdn,$col){
+
+    public function getColumnData($msisdn, $col)
+    {
         $db = Database::getInstance();
-        try{
-            $stmt = $db->prepare("SELECT " .$col. " FROM  sessionmanager WHERE  msisdn = :msisdn");
+        try {
+            $stmt = $db->prepare("SELECT " . $col . " FROM  sessionmanager WHERE  msisdn = :msisdn");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -102,11 +103,12 @@ class ApplicationFunctions
             return null;
         }
     }
-    
-    public function updateColumn($transactionID,$col,$value){
+
+    public function updateColumn($transactionID, $col, $value)
+    {
         $db = Database::getInstance();
-        try{
-            $stmt = $db->prepare("update transactions set " . $col . " = :value where transactionID = :trans_id");
+        try {
+            $stmt   = $db->prepare("update transactions set " . $col . " = :value where transactionID = :trans_id");
             $params = array(":trans_id" => $transactionID, ":value" => $value);
             $stmt->execute($params);
             if ($stmt->rowCount() > 0) {
@@ -127,7 +129,7 @@ class ApplicationFunctions
     public function GetTransactionType($msisdn, $col)
     {
         $db = Database::getInstance();
-        try{
+        try {
             $stmt = $db->prepare("SELECT " . $col . " FROM  sessionmanager WHERE  msisdn = :msisdn");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
@@ -150,7 +152,7 @@ class ApplicationFunctions
     public function sessionManager($msisdn)
     {
         $db = Database::getInstance();
-        try{
+        try {
             $stmt = $db->prepare("SELECT (COUNT(msisdn)+ COUNT(transaction_type)+COUNT(amount)+COUNT(recipient_number)) AS counter FROM sessionmanager WHERE msisdn = :msisdn");
             $stmt->bindParam(":msisdn", $msisdn);
             $stmt->execute();
@@ -164,14 +166,15 @@ class ApplicationFunctions
         }
     }
 
-    public function addTransaction($sender_number, $recipient_number,$amount,$transactionID){
+    public function addTransaction($sender_number, $recipient_number, $amount, $transactionID)
+    {
         $db = Database::getInstance();
         try {
             $stmt = $db->prepare("insert into transactions(sender_msisdn,recipient_msisdn,amount,transactionID) values (:sender_msisdn,:recipient_msisdn,:amount,:transactionID)");
             $stmt->bindParam(":sender_msisdn", $sender_number);
             $stmt->bindParam(":recipient_msisdn", $recipient_number);
             $stmt->bindParam(":amount", $amount);
-            $stmt->bindParam(":transactionID",$transactionID);
+            $stmt->bindParam(":transactionID", $transactionID);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 return true;
@@ -181,11 +184,13 @@ class ApplicationFunctions
             return false;
         }
     }
-    
-    public function getTransactionDetails($transactionID){
+
+    public function getTransactionDetails($transactionID)
+    {
         $db = Database::getInstance();
-        try{
-            $stmt = $db->prepare("SELECT sender_msisdn,recipient_msisdn,amount FROM  transactions WHERE  transactionsID = :trans_id");
+
+        try {
+            $stmt = $db->prepare("SELECT sender_msisdn,recipient_msisdn,amount FROM  transactions WHERE  transactionID = :trans_id");
             $stmt->bindParam(":trans_id", $transactionID);
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -198,36 +203,37 @@ class ApplicationFunctions
         }
     }
 
-
     /**
-     * 
+     *
      * @param type $recipient_number phone number to send money to
      * @param type $sender_number phone number to send money from
      * @return string generated transaction id
      */
-    public function generateTransactionId($recipient_number,$sender_number){
+    public function generateTransactionId($recipient_number, $sender_number)
+    {
         $prefix = random_int(10, 1000);
-        $resp = substr($recipient_number,3,5);
-        $send = substr($sender_number,5);
-        
-        $transactionID = $prefix.$send.$resp;
+        $resp   = substr($recipient_number, 3, 5);
+        $send   = substr($sender_number, 5);
+
+        $transactionID = $prefix . $send . $resp;
         return $transactionID;
     }
 
     /**
-     * Retrieve the total number of transactions 
-     * 
+     * Retrieve the total number of transactions
+     *
      * */
-    public function transactionCount(){
+    public function transactionCount()
+    {
         $db = Database::getInstance();
-        try{
+        try {
 
             $stmt = $db->prepare("SELECT COUNT(*) FROM transactions");
             $stmt->execute();
             $num_rows = $stmt->fetchColumn();
 
             return $num_rows;
-        }catch (PDOException $e) {
+        } catch (PDOException $e) {
             #echo $e->getMessage();
             return null;
         }
@@ -235,11 +241,12 @@ class ApplicationFunctions
 
     /**
      * Reteieve all transaction from database
-     * 
+     *
      * */
-    public function getTransactions(){
+    public function getTransactions()
+    {
         $db = Database::getInstance();
-        try{
+        try {
             $stmt = $db->prepare("SELECT * FROM  transactions ORDER BY timestamp DESC");
             $stmt->execute();
             $res = $stmt->fetchAll();
@@ -254,11 +261,12 @@ class ApplicationFunctions
 
     /**
      * Retieve transactions for the current month
-     * 
+     *
      * */
-    public function getCurrentMonthTransactions(){
-       $db = Database::getInstance();
-        try{
+    public function getCurrentMonthTransactions()
+    {
+        $db = Database::getInstance();
+        try {
             $stmt = $db->prepare("SELECT SUM(amount) AS totaltrans FROM transactions WHERE MONTH(timestamp) = MONTH(NOW()) AND YEAR(timestamp) = YEAR(NOW())");
 
             $stmt->execute();
@@ -272,21 +280,23 @@ class ApplicationFunctions
         }
     }
 
-    public function countOfCompleteTransfers(){
+    public function countOfCompleteTransfers()
+    {
         $db = Database::getInstance();
-        try{
+        try {
 
-            $stmt = $db->prepare("SELECT COUNT(*) FROM transactions WHERE debit_status=success AND credit_status=success");
+            $stmt = $db->prepare("SELECT COUNT(*) FROM transactions as transcount WHERE debit_status=success AND credit_status=success");
             //$stmt->bindParam(":status1","success");
             //$stmt->bindParam(":status2","success");
             $stmt->execute();
-            $num_rows = $stmt->fetchColumn();
-
-            return $num_rows;
-        }catch (PDOException $e) {
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($res !== false) {
+                return $res['totaltrans'];
+            }
+        } catch (PDOException $e) {
             #echo $e->getMessage();
             return null;
         }
     }
-
 }
+?>
