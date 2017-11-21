@@ -214,4 +214,79 @@ class ApplicationFunctions
         return $transactionID;
     }
 
+    /**
+     * Retrieve the total number of transactions 
+     * 
+     * */
+    public function transactionCount(){
+        $db = Database::getInstance();
+        try{
+
+            $stmt = $db->prepare("SELECT COUNT(*) FROM transactions");
+            $stmt->execute();
+            $num_rows = $stmt->fetchColumn();
+
+            return $num_rows;
+        }catch (PDOException $e) {
+            #echo $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Reteieve all transaction from database
+     * 
+     * */
+    public function getTransactions(){
+        $db = Database::getInstance();
+        try{
+            $stmt = $db->prepare("SELECT * FROM  transactions ORDER BY timestamp DESC");
+            $stmt->execute();
+            $res = $stmt->fetchAll();
+            if ($res !== false) {
+                return $res;
+            }
+        } catch (PDOException $e) {
+            #echo $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Retieve transactions for the current month
+     * 
+     * */
+    public function getCurrentMonthTransactions(){
+       $db = Database::getInstance();
+        try{
+            $stmt = $db->prepare("SELECT SUM(amount) AS totaltrans FROM transactions WHERE MONTH(timestamp) = MONTH(NOW()) AND YEAR(timestamp) = YEAR(NOW())");
+
+            $stmt->execute();
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($res !== false) {
+                return $res['totaltrans'];
+            }
+        } catch (PDOException $e) {
+            #echo $e->getMessage();
+            return null;
+        }
+    }
+
+    public function countOfCompleteTransfers(){
+        $db = Database::getInstance();
+        try{
+
+            $stmt = $db->prepare("SELECT COUNT(*) FROM transactions WHERE debit_status=success AND credit_status=success");
+            //$stmt->bindParam(":status1","success");
+            //$stmt->bindParam(":status2","success");
+            $stmt->execute();
+            $num_rows = $stmt->fetchColumn();
+
+            return $num_rows;
+        }catch (PDOException $e) {
+            #echo $e->getMessage();
+            return null;
+        }
+    }
+
 }

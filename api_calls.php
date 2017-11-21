@@ -12,7 +12,7 @@ class APICalls
      * @param type $vendor The telecom member of the 
      * @return type The status of the call
      */
-    public function debit($amount, $sender_number, $vendor,$transactionID)
+    public function debit($amount,$sender_number,$vendor,$transactionID)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -23,13 +23,13 @@ class APICalls
                 'amt'        => "$amount",
                 'number'     => "$sender_number",
                 'uid'        => 'ibrahim.abdullah',
-                'pass'       => 'profib2018',
+                'pass'       => 'ibrahim.abdullah',
                 'tp'         => "$transactionID",
                 'trans_type' => 'debit',
                 'msg'        => 'tranfering money',
                 'vendor'     => "$vendor",
-                'cbk'        => '144.76.58.179/ashesi/700/debit_api_response.php',
-            ),
+                'cbk'        => 'http://16d4a517.ngrok.io/mobilesystem/debit_api_response.php'
+            )
         ));
         $response = curl_exec($curl);
 
@@ -59,13 +59,13 @@ class APICalls
                 'amt'        => "$amount",
                 'number'     => "$recipient_number",
                 'uid'        => 'ibrahim.abdullah',
-                'pass'       => 'profib2018',
+                'pass'       => 'ibrahim.abdullah',
                 'tp'         => "$transactionID",
                 'trans_type' => 'credit',
                 'msg'        => 'Recieving money',
                 'vendor'     => "$vendor",
-                'cbk'        => '144.76.58.179/ashesi/700/credit_api_response.php',
-            ),
+                'cbk'        => 'http://16d4a517.ngrok.io/mobilesystem/credit_api_response.php'
+            )
         ));
         $response = curl_exec($curl);
         

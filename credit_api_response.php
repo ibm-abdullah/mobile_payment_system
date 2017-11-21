@@ -10,9 +10,10 @@ require 'api_calls.php';
 require 'data_processing.php';
 require 'sms_functions.php';
 
-$transactionID = POST['transaction_id'];
-$status = POST['status'];
-$responseMessage = POST['responseMessage'];
+$transactionID = $_REQUEST['trans_id'];
+$status = $_REQUEST['status'];
+$responseMessage = $_REQUEST['responseMessage'];
+file_put_contents('ussd_access.log', $responseMessage, FILE_APPEND);
 
 $send_sms  = new SMS_Functions();
 $ussd = new ApplicationFunctions();
@@ -27,10 +28,10 @@ if($status == 'success'){
     
     //Message recipient that money has been tranfeered into her mobile money
     //account
-    $send_sms->sendCreditSuccessMessage($transaction,"sender");
+    $send_sms->sendCreditSuccessMessage($transaction,"sender",$responseMessage);
     
     //Message sender that money has been tranferred to the recipient succesfully
-    $send_sms->sendCreditSuccessMessage($transaction,"reciever");
+    $send_sms->sendCreditSuccessMessage($transaction,"reciever",$responseMessage);
 }else{
     //Send  a text message that transaction could not be processed
 }

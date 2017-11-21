@@ -10,10 +10,10 @@ require 'api_calls.php';
 require 'data_processing.php';
 require 'sms_functions.php';
 
-$transactionID = POST['transaction_id'];
-$status = POST['status'];
-$responseMessage = POST['responseMessage'];
-
+$transactionID = $_REQUEST['trans_id'];
+$status = $_REQUEST['status'];
+$responseMessage = $_REQUEST['responseMessage'];
+file_put_contents('ussd_access.log', $responseMessage, FILE_APPEND);
 
 //Application variables
 $send_sms  = new SMS_Functions();
@@ -33,7 +33,7 @@ if($status == 'success'){
         $amount = $transaction['amount'];
         
         //Send SMS
-        $send_sms->sendDebitSuccessMessage($transaction);
+        $send_sms->sendDebitSuccessMessage($transaction,$responseMessage);
         $recipient_vendor = $data_processor->identifyVendor($recipient_number);
         
         //make API call
@@ -48,7 +48,6 @@ if($status == 'success'){
 }else{
     //Send  a text message that transaction could not be processed
     $transaction = $ussd->getTransactionDetails($transactionID);
-    $send_sms->sendDebitFailedMessage($transaction);
+    $send_sms->sendDebitFailedMessage($transaction,$responseMessage);
 }
-
 ?>

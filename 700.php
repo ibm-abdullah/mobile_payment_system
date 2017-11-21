@@ -30,12 +30,14 @@ $msisdn = $_GET['number'];
 $data = $_GET['body'];
 $sessionID= $_GET['sessionID'];
 $reply= '';
+
+
 //Check for the seesion level of the user
 $sess = intval($ussd->sessionManager($msisdn));
 
 //Log a session reguest to file
-//$write = $time . "|Request|" . $msisdn . "|" . $sessionID . "|" . $data . "|" . $sess . PHP_EOL;
-//file_put_contents('ussd_access.log', $write, FILE_APPEND);
+$write = $time . "|Request|" . $msisdn . "|" . $sessionID . "|" . $data . "|" . $sess . PHP_EOL;
+file_put_contents('ussd_access.log', $write, FILE_APPEND);
 
 //Check the seesion level of the user
 
@@ -171,5 +173,5 @@ if ($sess == "0") {
 $response = $msisdn.'|'.$reply .'|'. $sessionID.'|'.$type;
 //$response = $reply . '|' . $type;
 $write    = $time . "|Request_reply|" . $response . PHP_EOL;
-//file_put_contents('ussd_access.log', $write, FILE_APPEND);
+file_put_contents('ussd_access.log', $write, FILE_APPEND);
 echo $response;

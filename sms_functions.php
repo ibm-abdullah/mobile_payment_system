@@ -7,42 +7,85 @@
  */
 class SMS_Functions {
     
-    public function sendDebitSuccessMessage($transaction) {
-       $message = $transaction['amount']." GHS  has been tranfered succesfully to merchant Ibrahim Abdullah";
-       $url = "api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination=".$transaction['sender_msisdn']."&source=Test&message=".$message;
+    public function sendDebitSuccessMessage($transaction,$message) {
+
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => 'api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination='.$transaction['sender_msisdn'].'&source=Test&message='.$message
+        ));
+        // Send the request & save response to $resp
+        $resp = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+       
+       //$url = "api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination=".$transaction['sender_msisdn']."&source=Test&message=".$message;
        
         //Send message
-        $response = new HttpRequest($url, HttpRequest::METH_GET);
-        $response->send();
+        //$response = new HttpRequest($url, HttpRequest::METH_GET);
+        //$response->send();
     }
     
-    public function sendDebitFailedMessage($transaction) {
-       $message ="Transaction unsuccesful. Make sure you have enough money if your account";
-       $url = "api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination=".$transaction['sender_msisdn']."&source=Test&message=".$message;
+    public function sendDebitFailedMessage($transaction,$message) {
+
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => 'api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination='.$transaction['sender_msisdn'].'&source=Test&message='.$message
+        ));
+        // Send the request & save response to $resp
+        $resp = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+       //$url = "api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination=".$transaction['sender_msisdn']."&source=Test&message=".$message;
        
         //Send message
-        $response = new HttpRequest($url, HttpRequest::METH_GET);
-        $response->send();
+        //$response = new HttpRequest($url, HttpRequest::METH_GET);
+        //$response->send();
     }
-    public function sendCreditSuccessMessage($transaction,$who) {
-        $message = '';
+    public function sendCreditSuccessMessage($transaction,$who,$message) {
         $url = '';
         if($who =="sender"){
-            $message = $transaction['amount']." GHS  has been tranfered succesfully to ". $transaction['recipient_msisdn'];
             $url = "api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination=".$transaction['sender_msisdn']."&source=Test&message=".$message;
         }else if($who =="reciever"){
-            $message = $transaction['sender_msisdn']. " has tranfered ".$transaction['amount']." GHS to your mobile money account";
             $url = "api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination=".$transaction['recipient_msisdn']."&source=Test&message=".$message;
         }else{
             
         }
+
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL =>"$url"
+        ));
+        // Send the request & save response to $resp
+        $resp = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
         //Send message
-        $response = new HttpRequest($url, HttpRequest::METH_GET);
-        $response->send();
+        //$response = new HttpRequest($url, HttpRequest::METH_GET);
+        //$response->send();
     }
     
-    public function sendCreditFailedMessage($msisdn) {
-        
+    public function sendCreditFailedMessage($msisdn,$message) {       
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL =>'api.deywuro.com/bulksms/?username=AshesiMoney&password=ashesi@123&type=0&dlr=1&destination='.$transaction['recipient_msisdn'].'&source=Test&message='.$message
+        ));
+        // Send the request & save response to $resp
+        $resp = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        //Send message
+        //$response = new HttpRequest($url, HttpRequest::METH_GET);
+        //$response->send();
+
     }
 
 }

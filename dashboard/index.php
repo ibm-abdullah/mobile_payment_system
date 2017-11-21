@@ -1,3 +1,10 @@
+<?php
+    require '../application_functions.php';
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,145 +12,77 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="../plugins/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <title>Hamdulilah Mobile Payment Services</title>
-    <!-- Bootstrap Core CSS -->
+
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Menu CSS -->
-    <link href="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
-    <!-- toast CSS -->
-    <link href="plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
-    <!-- morris CSS -->
-    <link href="plugins/bower_components/morrisjs/morris.css" rel="stylesheet">
-    <!-- chartist CSS -->
-    <link href="plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
-    <link href="plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
-    <!-- animation CSS -->
-    <link href="css/animate.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
-    <!-- color CSS -->
     <link href="css/colors/default.css" id="theme" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 
 <body class="fix-header">
-    <div class="preloader">
-        <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
-        </svg>
-    </div>
     <div id="wrapper">
-        <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
-        <!-- ============================================================== -->
-        <nav class="navbar navbar-default navbar-static-top m-b-0">
-            <div class="navbar-header">
-                <div class="top-left-part">
-                    <!-- Logo -->
-                    <a class="logo" href="index.html">
-                        <!-- Logo icon image, you can use font-icon also --><b>
-                        <!--This is dark logo icon--><img src="plugins/images/admin-logo.png" alt="home" class="dark-logo" /><!--This is light logo icon--><img src="plugins/images/admin-logo-dark.png" alt="home" class="light-logo" />
-                     </b>
-                        <!-- Logo text image you can use text also --><span class="hidden-xs">
-                        <!--This is dark logo text--><img src="plugins/images/admin-text.png" alt="home" class="dark-logo" /><!--This is light logo text--><img src="plugins/images/admin-text-dark.png" alt="home" class="light-logo" />
-                     </span> </a>
-                </div>
-                <!-- /Logo -->
-            </div>
-            <!-- /.navbar-header -->
-            <!-- /.navbar-top-links -->
-            <!-- /.navbar-static-side -->
-        </nav>
-        <!-- End Top Navigation -->
-        <!-- ============================================================== -->
-        <!-- Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
         <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav slimscrollsidebar">
+            <div class="sidebar-nav">
                 <div class="sidebar-head">
-                    <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3>
+                    <h3><span class="hide-menu">Hamdulilah Mobile Payment Services</span></h3>
                 </div>
-                <ul class="nav" id="side-menu">
-                    <li style="padding: 70px 0 0;">
-                        <a href="index.html" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>Dashboard</a>
-                    </li>
-                </ul>
             </div>
-            
         </div>
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Page Content -->
-        <!-- ============================================================== -->
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         <h4 class="page-title">Dashboard</h4> </div>
                 </div>
-                <!-- /.row -->
-                <!-- ============================================================== -->
-                <!-- Different data widgets -->
-                <!-- ============================================================== -->
-                <!-- .row -->
+                <?php
+                    $ussd = new ApplicationFunctions();
+                    $transcations = $ussd->transactionCount();
+                    //echo "$transcations";
+                ?>
                 <div class="row">
                     <div class="col-lg-4 col-sm-6 col-xs-12">
                         <div class="white-box analytics-info">
-                            <h3 class="box-title">No Of Transaction</h3>
-                            <ul class="list-inline two-part">
-                                <li>
-                                    <div id="sparklinedash"></div>
-                                </li>
-                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success">659</span></li>
+                            <h3 class="box-title">Number Of Transaction</h3>
+                            <ul class="list-inline">
+                                <li class="text-center"><span class="counter text-success"><?php echo "$transcations";  ?></span></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-xs-12">
                         <div class="white-box analytics-info">
-                            <h3 class="box-title">Total Amount Transfered</h3>
-                            <ul class="list-inline two-part">
-                                <li>
-                                    <div id="sparklinedash2"></div>
-                                </li>
-                                <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple">869</span></li>
+                            <h3 class="box-title">Number of complete transfer</h3>
+                            <ul class="list-inline">
+                                <li class="text-center"> <span class="counter text-purple"><?php $count = $ussd->countOfCompleteTransfers(); echo "$count";  ?>0</span></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-xs-12">
                         <div class="white-box analytics-info">
                             <h3 class="box-title">Current Month Trasactions</h3>
-                            <ul class="list-inline two-part">
-                                <li>
-                                    <div id="sparklinedash3"></div>
-                                </li>
-                                <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">911</span></li>
+                            <ul class="list-inline">
+                                <li class="text-center"><span class="counter text-info"><?php $currMonth =$ussd->getCurrentMonthTransactions(); echo "$currMonth"; ?></span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <!-- ============================================================== -->
-                <!-- table -->
-                <!-- ============================================================== -->
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-sm-12">
                         <div class="white-box">
                             <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
                                 <select class="form-control pull-right row b-none">
-                                    <option>March 2017</option>
-                                    <option>April 2017</option>
-                                    <option>May 2017</option>
-                                    <option>June 2017</option>
-                                    <option>July 2017</option>
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
                                 </select>
                             </div>
                             <h3 class="box-title">Recent Money Transfer</h3>
@@ -162,13 +101,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td class="txt-oflo">Elite admin</td>
-                                            <td>SALE</td>
-                                            <td class="txt-oflo">April 18, 2017</td>
-                                            <td><span class="text-success">$24</span></td>
-                                        </tr>
+                                        <?php  
+                                            $ussd = new ApplicationFunctions();
+                                            $transactions = $ussd->getTransactions();
+                                            //print_r($transactions);
+                                            //var_dump($transactions);
+                                            //echo $transactions['id'];
+                                            //var_dump($transactions['id']);
+                                            $i = 1;
+                                            if($transactions != null){
+                                                foreach ($transactions as $record) {
+                                                    echo '<tr><td>'.$i.'</td>
+                                                        <td class="txt-oflo">'.$record["sender_msisdn"].'</td>
+                                                        <td class="txt-oflo">'.$record["recipient_msisdn"].'</td>
+                                                        <td class="txt-oflo">'.$record['amount'].'</td>
+                                                        <td class="txt-oflo">'.$record['timestamp'].'</td>
+                                                        <td class="txt-oflo">'.$record['transactionID'].'</td>
+                                                        <td class="txt-oflo">'.$record['debit_status'].'</td>
+                                                        <td class="txt-oflo">'.$record['credit_status'].'</td></tr>';
+                                                        $i++;
+                                                }
+                                            }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -181,37 +135,9 @@
             <!-- /.container-fluid -->
             <footer class="footer text-center"> 2017 &copy; Hamdulilah Mobile Payment Services</footer>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Page Content -->
-        <!-- ============================================================== -->
+
     </div>
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- All Jquery -->
-    <!-- ============================================================== -->
-    <script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap Core JavaScript -->
     <script src="bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Menu Plugin JavaScript -->
-    <script src="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
-    <!--slimscroll JavaScript -->
-    <script src="js/jquery.slimscroll.js"></script>
-    <!--Wave Effects -->
-    <script src="js/waves.js"></script>
-    <!--Counter js -->
-    <script src="plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
-    <script src="plugins/bower_components/counterup/jquery.counterup.min.js"></script>
-    <!-- chartist chart -->
-    <script src="plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
-    <script src="plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
-    <!-- Sparkline chart JavaScript -->
-    <script src="plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <!-- Custom Theme JavaScript -->
-    <script src="js/custom.min.js"></script>
-    <script src="js/dashboard1.js"></script>
-    <script src="plugins/bower_components/toast-master/js/jquery.toast.js"></script>
 </body>
 
 </html>
