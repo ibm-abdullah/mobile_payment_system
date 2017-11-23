@@ -35,7 +35,7 @@ $sess = intval($ussd->sessionManager($msisdn));
 
 //Log a session reguest to file
 $write = $time . "|Request|" . $msisdn . "|" . $sessionID . "|" . $data . "|" . $sess . PHP_EOL;
-//file_put_contents('ussd_access.log', $write, FILE_APPEND);
+file_put_contents('ussd_access.log', $write, FILE_APPEND);
 
 //Check the seesion level of the user
 
@@ -43,7 +43,7 @@ if ($sess == "0") {
     //If the session level is zero, display the application menu to the user
     $response = $ussd->IdentifyUser($msisdn);
 
-    $reply = "Welcome to Hamdulilah Mobile Payment System" . "\r\n" . "1. Send Money to all Networks" . "\r\n" . "0. Exit";
+    $reply = "Welcome to Hamdulilah Mobile Payment System". "\r\n"."Enter " . "\r\n" . "1. Send Money to all Networks" . "\r\n" . "0. Exit";
     $type  = "1";
 } else {
 
@@ -52,7 +52,7 @@ if ($sess == "0") {
         case 1: #SESSION COUNT =1 #SERVICE LEVEL 1
 
             if ($data == '1') {
-                $reply = "Enter the amount to be transferred in Ghana cedis" . "\r\n" . "0. Exit";
+                $reply = "Enter the amount to be transferred in Ghana cedis" . "\r\n". "\r\n" . "0. Exit";
                 $type  = "1";
                 $ussd->updateSessionLevel($msisdn, "transaction_type", "DEBIT");
             } elseif ($data == '0') {
@@ -68,10 +68,10 @@ if ($sess == "0") {
         case 2: #SESSION COUNT =2 #SERVICE LEVEL 2
 
             //Validate the amount of money entered by the user
-            if (preg_match("/^\d+(?:\.\d{2})?$/", $data)) {
+            if (preg_match('/^[0-9]+(?:\.[0-9]{0,2})?$/', $data)) {
                 //add send button and cancel button to the interface
                 $amountToBeTransfered = $data;
-                $reply = "Enter the phone number of the person you're sending the money to.Example:0541111111" . "\r\n" . "0. Exit";
+                $reply = "Enter the phone number of the person you're sending the money to.Example:0541111111". "\r\n"."Enter " . "\r\n"."\r\n" . "0. Exit";
                 $type  = "1";
                 $ussd->updateSessionLevel($msisdn, "amount", "$data");
             } elseif ($data == '0') {
@@ -94,12 +94,18 @@ if ($sess == "0") {
                 $data_processor = new ProcessUserInput();
 
                 //Determine the vendor of the sender and recipient phone  numbers
-                $recipient_vendor = $data_processor->identifyVendor($data);
+                $recipient_vendor='';
+                if(strlen($data)==10){
+                    $recipient_vendor = $data_processor->identifyVendor($data);
+                }else{
+                    $recipient_vendor = $data_processor->identifyVendor2($data);
+                }
+                //$recipient_vendor = $data_processor->identifyVendor($data);
                 $recipient_number = $data;
                 
                 //Cancel transaction if recipient number number does not have 
                 //the correct venfor name
-                if($recipient_vendor == NULL){
+                if($recipient_vendor === NULL){
                     //Incorrect recipient number
                     //Cancel transaction
                     $reply = "Recipient number incorrect.Kindly try again";
@@ -127,9 +133,17 @@ if ($sess == "0") {
                 
                 $amount = $ussd->getColumnData($msisdn,"amount");
                 $recipient_number = $ussd->getColumnData($msisdn,"recipient_number");
+
+                //echo "$recipient_number";
+                //echo "$msisdn";
                 
                 $data_processor = new ProcessUserInput();
-                $sender_vendor    = $data_processor->identifyVendor($msisdn);
+                $sender_vendor='';
+                if(strlen($msisdn)==10){
+                    $sender_vendor = $data_processor->identifyVendor($msisdn);
+                }else{
+                    $sender_vendor = $data_processor->identifyVendor2($msisdn);
+                }
                 
                 //Generate transaction ID
                 $transactionID = $ussd->generateTransactionId($recipient_number, $msisdn);
@@ -140,13 +154,17 @@ if ($sess == "0") {
                 //make the firs API call 
                 $api_accesor = new APICalls();
                 $debit_response = $api_accesor->debit($amount, $msisdn, $sender_vendor, $transactionID);
+                //var_dump($debit_response);
                 
-                if(($debit_response == null) ||($debit_response['status'] =="failed")){
-                    $reply = "Apllication server is down. Please try again later";
+                if(($debit_response == null) ||(strtolower($debit_response['status']) =="failed")){
+
+                    $reply = "Service not available now. Please try again later".$debit_response;
+                
                     $type = "0";
                     $ussd->deleteSession($msisdn);
+
                 }else{ 
-                    $reply = "Your transaction is being processed. You will receieve a notification to authorize the transaction very soon. You will also receive an SMS about the transaction status.Thank you";
+                    $reply = "Your transaction is being processed. You will also receive an SMS about the transaction status.Thank you";
                     $type = "0";
                     $ussd->deleteSession($msisdn);
                 }
@@ -171,6 +189,6 @@ if ($sess == "0") {
 $response = $msisdn.'|'.$reply .'|'. $sessionID.'|'.$type;
 //$response = $reply . '|' . $type;
 $write    = $time . "|Request_reply|" . $response . PHP_EOL;
-//file_put_contents('ussd_access.log', $write, FILE_APPEND);
+file_put_contents('ussd_access.log', $write, FILE_APPEND);
 echo $response;
 ?>

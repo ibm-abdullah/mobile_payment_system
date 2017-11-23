@@ -28,8 +28,8 @@ class APICalls
                 'trans_type' => 'debit',
                 'msg'        => 'debit transfer',
                 'vendor'     => $vendor,
-                'cbk'        => '144.76.58.179/ashesi/700/debit_api_response.php',
-            ),
+                'cbk'        => '144.76.58.179/ashesi/700/debit_api_response.php'
+            )
         ));
         $response = curl_exec($curl);
 
@@ -64,8 +64,8 @@ class APICalls
                 'trans_type' => 'credit',
                 'msg'        => 'credit transfer',
                 'vendor'     => $vendor,
-                'cbk'        => '144.76.58.179/ashesi/700/credit_api_response.php',
-            ),
+                'cbk'        => '144.76.58.179/ashesi/700/credit_api_response.php'
+            )
         ));
         $response = curl_exec($curl);
 
