@@ -18,8 +18,8 @@ class SMS_Functions
             CURLOPT_URL            => 'http://api.deywuro.com/bulksms/',
             CURLOPT_POST           => 1,
             CURLOPT_POSTFIELDS     => array(
-                'username'    => 'AshesiMoney',
-                'password'    => 'ashesi@123',
+                'username'    => '', // username on the sms server
+                'password'    => '', //password to acess validte user on the sms server
                 'type'        => '0',
                 'dlr'         => '1',
                 'destination' => $transaction['sender_msisdn'],
